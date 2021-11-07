@@ -1,38 +1,59 @@
 import React from "react";
-import styles from './Car.css';
+import classes from "./Car.module.css";
+import PropTypes from 'prop-types'
 import withClass from '../hoc/withClass'
-import {ReactComponent} from "*.svg";
 
 class Car extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.inputRef = React.createRef()
+    }
+
+    componentDidMount() {
+        if(this.props.index === 1){
+            this.inputRef.current.focus()
+        }
+    }
+
     render() {
 
-        const inputClasses = [styles.input];
+        const inputClasses = [classes.input];
 
         if (this.props.name !== ""){
-            inputClasses.push(styles.green)
+            inputClasses.push(classes.green)
         } else {
-            inputClasses.push(styles.red)
+            inputClasses.push(classes.red)
         }
 
         if (this.props.name.length > 4){
-            inputClasses.push(styles.bold)
+            inputClasses.push(classes.bold)
         }
 
         return (
-            <div className={styles.Car}>
+            <React.Fragment>
                 <h3>Car name: {this.props.name}</h3>
                 <p>Year: <strong>{this.props.year}</strong></p>
                 <input
+                    ref={this.inputRef}
                     type="text"
                     onChange={this.props.onChangeName}
                     value={this.props.name}
                     className={inputClasses.join(' ')}
                 />
                 <button onClick={this.props.onDelete}>Delete</button>
-            </div>
+            </React.Fragment>
         )
     }
 }
 
-export default Car
+Car.propTypes = {
+    name: PropTypes.string.isRequired,
+    year: PropTypes.number,
+    index: PropTypes.number,
+    onChangeName: PropTypes.func,
+    onDelete: PropTypes.func
+}
+
+export default withClass(Car, classes.Car)
